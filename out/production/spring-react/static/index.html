@@ -3,8 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello world</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-    Welcome to spring-react!
+<div id="root"></div>
+
+<script src="https://fb.me/react-15.0.1.js"></script>
+<script src="https://fb.me/react-dom-15.0.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script type="text/babel">
+    var App = React.createClass({
+
+        loadProducts: function () {
+            var self = this;
+            $.ajax({
+                url: "http://localhost:8080/api/products"
+            }).then(function (data) {
+                self.setState({products: data._embedded.products});
+            });
+        },
+
+        getInitialState: function () {
+            return {products: []};
+        },
+
+        componentDidMount: function () {
+            this.loadProducts();
+        },
+
+        render: function () {
+            return (<ProductsTable products={this.state.products}/>)
+        }
+    });
+
+    var Product = React.createClass({
+        render: function () {
+            return (
+                    <tr>
+                        <td>{this.props.product.name}</td>
+                        <td>{this.props.product.currentPrice}</td>
+                        <td>{this.props.product.previousPrice}</td>
+                    </tr>
+            )
+        }
+    });
+    var ProductsTable = React.createClass({
+        render: function () {
+            var rows = [];
+            this.props.products.forEach(function (product) {
+                rows.push(<Product key={product.name} product={product}/>);
+            });
+            return (
+                    <div className="container">
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Current Price</th>
+                                    <th>Previous Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows}
+                            </tbody>
+                        </table>
+                    </div>
+            );
+        }
+    });
+
+    ReactDOM.render(
+            <App />, document.getElementById('root')
+    );
+
+
+</script>
 </body>
 </html>

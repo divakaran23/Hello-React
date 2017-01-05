@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
- * @author Divakaran Jeyachandran - djeyachandran@expedia.com
+ * @author Divakaran Jeyachandran
  */
 @Controller
 public class HomeController {
